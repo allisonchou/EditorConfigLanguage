@@ -52,16 +52,19 @@ namespace EditorConfig
                     IEnumerable<DisplayError> errors = items.SelectMany(i => i.Errors);
                     var actions = new List<SuppressErrorAction>();
 
-                    foreach (DisplayError error in errors)
+                    foreach ( DisplayError error in errors )
                     {
                         var action = new SuppressErrorAction(_document, error.Name);
 
-                        if (action.IsEnabled)
+                        if ( action.IsEnabled )
                             actions.Add(action);
                     }
-
                     list.AddRange(CreateActionSet(actions.ToArray()));
                 }
+
+                // TO-DO: Only have option show if missing rules present
+                var addMissingRules = new AddMissingRulesAction(_document, _view);
+                list.AddRange(CreateActionSet(addMissingRules));
             }
 
             return list;
