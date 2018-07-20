@@ -5,7 +5,7 @@
   "definitions": {
     "keyword": {
       "type": "object",
-      "required": [ "name", "description", "values" ],
+      "required": [ "name", "description", "values", "default-value" ],
       "additionalProperties": false,
 
       "properties": {
@@ -29,6 +29,12 @@
         },
         "values": {
           "type": "array"
+        },
+        "default-value": {
+          "type": "array"
+        },
+        "default-severity": {
+          "enum": [ "none", "suggestion", "warning", "error" ]
         }
       }
     },

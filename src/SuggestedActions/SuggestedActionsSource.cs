@@ -62,9 +62,13 @@ namespace EditorConfig
                     list.AddRange(CreateActionSet(actions.ToArray()));
                 }
 
-                // TO-DO: Only have option show if missing rules present
-                var addMissingRules = new AddMissingRulesAction(_document, _view);
-                list.AddRange(CreateActionSet(addMissingRules));
+                // Missing rules
+                List<Keyword> missingRules = AddMissingRulesAction.FindMissingRulesAll(_document.GetAllIncludedRules());
+                if (missingRules != null)
+                {
+                    var addMissingRules = new AddMissingRulesAction(missingRules, _document, _view);
+                    list.AddRange(CreateActionSet(addMissingRules));
+                }
             }
 
             return list;
