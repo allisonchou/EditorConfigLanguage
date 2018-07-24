@@ -52,11 +52,11 @@ namespace EditorConfig
                     IEnumerable<DisplayError> errors = items.SelectMany(i => i.Errors);
                     var actions = new List<SuppressErrorAction>();
 
-                    foreach ( DisplayError error in errors )
+                    foreach (DisplayError error in errors)
                     {
                         var action = new SuppressErrorAction(_document, error.Name);
 
-                        if ( action.IsEnabled )
+                        if (action.IsEnabled)
                             actions.Add(action);
                     }
                     list.AddRange(CreateActionSet(actions.ToArray()));

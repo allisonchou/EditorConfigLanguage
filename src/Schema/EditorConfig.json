@@ -35,13 +35,13 @@
       "name": "end_of_line",
       "description": "Line ending file format (Unix, DOS, Mac).",
       "values": [ "lf", "crlf", "cr", "unset" ],
-      "defaultValue": [ "crlf" ]
+      "defaultValue": [ "unset" ]
     },
     {
       "name": "indent_style",
       "description": "Indentation style.",
       "values": [ "tab", "space", "unset" ],
-      "defaultValue": [ "unset" ]
+      "defaultValue": [ "space" ]
     },
     {
       "name": "indent_size",

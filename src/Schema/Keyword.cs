@@ -43,6 +43,7 @@ namespace EditorConfig
         public bool SupportsMultipleValues { get; }
 
         public bool RequiresSeverity { get; }
+
         public string DefaultSeverity { get; }
 
         /// <summary>The category is used in the Intellisense filters.</summary>
