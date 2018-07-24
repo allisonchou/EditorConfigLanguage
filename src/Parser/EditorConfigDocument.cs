@@ -85,7 +85,7 @@ namespace EditorConfig
             {
                 foreach (ParseItem parseItem in curDoc.ParseItems)
                 {
-                    string parseItemStr = parseItem.ToString();
+                    string parseItemStr = parseItem.Text;
                     if (!rules.Contains(parseItemStr) && parseItem.ItemType == ItemType.Keyword)
                     {
                         rules.Add(parseItemStr);

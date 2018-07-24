@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,15 +45,33 @@ namespace EditorConfig
 
             var addMissingRulesActionAll = new AddMissingRulesActionAll(_missingRules, _document, _view);
 
-            var addMissingRulesActionCSharp = new AddMissingRulesActionCSharp(_document, _view);
-            var addMissingRulesActionVB = new AddMissingRulesActionVB(_document, _view);
+            List<Keyword> missingRulesDotNet = FindMissingRulesSpecific(Category.DotNet);
+            List<Keyword> missingRulesCSharp = FindMissingRulesSpecific(Category.CSharp);
+            List<Keyword> missingRulesVB = FindMissingRulesSpecific(Category.VisualBasic);
 
-            list.AddRange(CreateActionSet(addMissingRulesActionAll, addMissingRulesActionCSharp, addMissingRulesActionVB));
+            AddMissingRulesActionDotNet addMissingRulesActionDotNet = null;
+            AddMissingRulesActionCSharp addMissingRulesActionCSharp = null;
+            AddMissingRulesActionVB addMissingRulesActionVB = null;
+            if (missingRulesDotNet.Count() != 0)
+            {
+                addMissingRulesActionDotNet = new AddMissingRulesActionDotNet(missingRulesDotNet, _document, _view);
+            }
+            if (missingRulesCSharp.Count() != 0)
+            {
+                addMissingRulesActionCSharp = new AddMissingRulesActionCSharp(missingRulesCSharp, _document, _view);
+            }
+            if (missingRulesVB.Count() != 0)
+            {
+                addMissingRulesActionVB = new AddMissingRulesActionVB(missingRulesVB, _document, _view);
+            }
+
+            list.AddRange(CreateActionSet(addMissingRulesActionAll, addMissingRulesActionDotNet, addMissingRulesActionCSharp, addMissingRulesActionVB));
             return Task.FromResult<IEnumerable<SuggestedActionSet>>(list);
         }
    
         public IEnumerable<SuggestedActionSet> CreateActionSet(params BaseSuggestedAction[] actions)
         {
+            actions = actions.Where(val => val != null).ToArray();
             return new[] { new SuggestedActionSet(actions) };
         }
 
@@ -63,43 +83,33 @@ namespace EditorConfig
         internal static List<Keyword> FindMissingRulesAll(List<string> currentRules)
         {
             var missingRules = new List<Keyword>();
+            var missingRuleNames = new List<string>();
             IEnumerator<Keyword> allRules = SchemaCatalog.VisibleKeywords.GetEnumerator();
             while (allRules.MoveNext())
             {
-                if (!currentRules.Contains(allRules.Current.Name) && !allRules.Current.Name.StartsWith("dotnet_naming"))
+                string curRule = allRules.Current.Name.ToLower(CultureInfo.InvariantCulture);
+                if (!currentRules.Contains(curRule) && !missingRuleNames.Contains(curRule) && !curRule.StartsWith("dotnet_naming") && !curRule.Equals("root") && !curRule.Equals("max_line_length"))
                 {
                     missingRules.Add(allRules.Current);
+                    missingRuleNames.Add(curRule);
                 }
-            }
-
-            if (missingRules.Count() == 0)
-            {
-                return null;
             }
 
             return missingRules;
         }
 
-        // TO-DO: Find missing rules for C#, Core, VB, .NET
-        // Should .NET rules include C# and VB rules, or just general .NET rules? Hmm.... Also, should check if language identifier is present.
-        private List<Keyword> FindMissingRulesDotNet(string language)
+        private List<Keyword> FindMissingRulesSpecific(Category language)
         {
+            var missingRules = new List<Keyword>();
             foreach (Keyword curRule in _missingRules)
             {
-                if (curRule.Name.StartsWith(language))
+                if (curRule.Category == language)
                 {
-                    specificMissingRules.Add(curRule);
+                    missingRules.Add(curRule);
                 }
             }
-        }
 
-        private static class LanguageNames
-        {
-            public const string CSharp = "csharp";
-
-            public const string VisualBasic = "visual_basic";
-
-            public const string DotNet = "dotnet";
+            return missingRules;
         }
     }
 }

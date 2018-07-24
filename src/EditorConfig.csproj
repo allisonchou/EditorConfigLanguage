@@ -69,6 +69,7 @@
     <Compile Include="Shared\TextViewUtil.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesAction.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesActionAll.cs" />
+    <Compile Include="SuggestedActions\AddMissingRulesActionDotNet.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesActionCSharp.cs" />
     <Compile Include="SuggestedActions\AddMissingRulesActionVB.cs" />
     <Compile Include="SuggestedActions\SuppressErrorAction.cs" />
@@ -195,6 +196,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <None Include="app.config" />
+    <Content Include="CodeExpansions\Snippets\vbstyle.snippet" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
